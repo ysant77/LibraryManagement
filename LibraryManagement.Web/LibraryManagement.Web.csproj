@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\LibraryManagement.Core\LibraryManagement.Core.csproj" />
     <ProjectReference Include="..\LibraryManagement.Persistence\LibraryManagement.Persistence.csproj" />
   </ItemGroup>
 
