@@ -1,8 +1,12 @@
-﻿
+﻿using LibraryManagement.Domain;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace LibraryManagement.Domain
+namespace LibraryManagement.Core.Commands
 {
-    public class Book
+    public class UpdateBookCommand : IRequest<Book>
     {
         public int Id { get; set; }
         public string Name { get; set; }

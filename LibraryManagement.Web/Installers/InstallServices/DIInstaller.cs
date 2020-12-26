@@ -1,0 +1,17 @@
+﻿using LibraryManagement.Core;
+using LibraryManagement.Web.Installers.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace LibraryManagement.Web.Installers.InstallServices
+{
+    public class DIInstaller : IInstaller
+    {
+        public void InstallServices(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddControllers();
+
+            services.AddCore();
+        }
+    }
+}

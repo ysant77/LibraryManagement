@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using LibraryManagement.Core;
-using LibraryManagement.Core.Books;
+using LibraryManagement.Core.Validators;
 using LibraryManagement.Persistence;
+using LibraryManagement.Web.Installers.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,15 +33,17 @@ namespace LibraryManagement.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(o => o.UseMySQL(Configuration.GetConnectionString("MySQL")));
-            services.AddCors(options => {
+          /*  services.AddCors(options => {
                 options.AddPolicy("CorsPolicy", policy => {
                     policy.AllowAnyHeader()
                           .AllowAnyMethod()
-                          .WithOrigins("http://localhost:3000");
+                          .AllowAnyOrigin();
                 });
             });
-            services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddControllers();
+            services.AddMediatR(typeof(List.Handler).Assembly);*/
+            /*services.AddControllers()
+                    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<BookValidator>());*/
+            services.InstallServicesInAssembly(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,10 +54,18 @@ namespace LibraryManagement.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("CorsPolicy");
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwagger();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management System");
+            });
 
             app.UseAuthorization();
 

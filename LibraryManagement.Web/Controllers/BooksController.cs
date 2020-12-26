@@ -1,56 +1,113 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using LibraryManagement.Core;
-using LibraryManagement.Core.Books;
-using LibraryManagement.Domain;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using LibraryManagement.Core.Commands;
+using LibraryManagement.Core.Common.Exceptions;
+using LibraryManagement.Core.Queries;
 using Microsoft.AspNetCore.Mvc;
+using static LibraryManagement.Web.Contracts.ApiRoutes;
 
 namespace LibraryManagement.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController : ApiBaseController
     {
-        private readonly IMediator _mediator;
-
-        public BooksController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Book>>> List()
+        public async Task<IActionResult> List()
         {
-            return await _mediator.Send(new List.Query());
+            return  Ok(await Mediator.Send(new BookListQuery()));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> Details(int id)
+        [HttpGet(BookRoutes.ByBookId)]
+        public async Task<IActionResult> Details(int id)
         {
-            return await _mediator.Send(new Details.Query { Id = id });
+            try
+            {
+                var book = await Mediator.Send(new BookDetailsQuery { Id = id });
+                return Ok(book);
+            }
+            catch (Exception ex)
+            {
+                if (ex is NotFoundException)
+                {
+                    return BadRequest(ex.Message);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Unit>> Create(Create.Command command)
+        [HttpPost(BookRoutes.CreateBook)]
+        public async Task<IActionResult> Create([FromBody] CreateBookCommand command)
         {
-            return await _mediator.Send(command);
+            try
+            {
+                var book = await Mediator.Send(command);
+                return Created($"/books/created/{book.Id}", book);
+            }
+            catch(Exception ex)
+            {
+                if(ex is ValidationException exception)
+                {
+                    return BadRequest(exception.Errors);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Edit(Edit.Command command, int id)
+        [HttpPut(BookRoutes.UpdateBook)]
+        public async Task<IActionResult> Edit([FromBody] UpdateBookCommand command, int id)
         {
             command.Id = id;
-            return await _mediator.Send(command);
+            try
+            {
+                var result =  await Mediator.Send(command);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ValidationException exception)
+                {
+                    return BadRequest(exception.Errors);
+                }
+                else if(ex is NotFoundException)
+                {
+                    return NotFound(ex.Message);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(int id)
+        [HttpDelete(BookRoutes.DeleteBook)]
+        public async Task<IActionResult> Delete(int id)
         {
-            return await _mediator.Send(new Delete.Command { Id = id });
+            try
+            {
+                var result = await Mediator.Send(new DeleteBookCommand { Id = id });
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                if(ex is NotFoundException)
+                {
+                    return NotFound(ex.Message);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
         }
     }
 }
