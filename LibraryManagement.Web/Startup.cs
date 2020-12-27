@@ -46,8 +46,8 @@ namespace LibraryManagement.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseLogging();
-
+            //app.UseLogging();
+            app.UseMiddleware<SerilogMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseRouting();
