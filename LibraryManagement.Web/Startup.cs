@@ -7,6 +7,7 @@ using LibraryManagement.Core;
 using LibraryManagement.Core.Validators;
 using LibraryManagement.Persistence;
 using LibraryManagement.Web.Installers.Extensions;
+using LibraryManagement.Web.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +45,8 @@ namespace LibraryManagement.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseLogging();
 
             app.UseHttpsRedirection();
 
