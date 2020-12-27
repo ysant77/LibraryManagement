@@ -45,7 +45,7 @@ pipeline {
 		stage('Publish') {
             steps {
                 sh 'dotnet publish ${APP_NAME} -c Release -o ../publish' 
-				sh 'docker build -t ${DOCKER_IMAGE_FILE} --build-arg APPLICATION=${APP_NAME} .'
+				sh 'docker build -t ${DOCKER_IMAGE_FILE} -f Dockerfile .'
 				sh 'docker tag ${DOCKER_IMAGE_FILE} ${USERNAME}/${DOCKER_REPOSITORY}:${TAG_NAME}'
 				sh 'docker image rm -f ${DOCKER_IMAGE_FILE}:${TAG_NAME}'
 				script{
