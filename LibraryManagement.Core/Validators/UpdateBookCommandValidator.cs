@@ -3,7 +3,7 @@ using LibraryManagement.Core.Commands;
 
 namespace LibraryManagement.Core.Validators
 {
-    class UpdateBookCommandValidator : AbstractValidator<UpdateBookCommand>
+    public class UpdateBookCommandValidator : AbstractValidator<UpdateBookCommand>
     {
         public UpdateBookCommandValidator()
         {

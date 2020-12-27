@@ -33,16 +33,7 @@ namespace LibraryManagement.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(o => o.UseMySQL(Configuration.GetConnectionString("MySQL")));
-          /*  services.AddCors(options => {
-                options.AddPolicy("CorsPolicy", policy => {
-                    policy.AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowAnyOrigin();
-                });
-            });
-            services.AddMediatR(typeof(List.Handler).Assembly);*/
-            /*services.AddControllers()
-                    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<BookValidator>());*/
+            
             services.InstallServicesInAssembly(Configuration);
         }
 
