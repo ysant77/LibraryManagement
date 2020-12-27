@@ -11,7 +11,7 @@ pipeline {
 			       defaultValue: 'yatharthsant',
 				   description: 'Enter your docker hub username here')
 			string(name: 'DOCKER_REPOSITORY',
-			       defaultValue: 'tripster',
+			       defaultValue: 'library-management',
 				   description: 'This is the docker repository where docker image (artifact) will be posted. If the specified name does not exist, a new repository with the specified name gets generated')
 			string(name: 'APPLICATION_PORT',
 			       defaultValue: '5000',
