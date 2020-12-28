@@ -17,7 +17,7 @@ namespace LibraryManagement.Web
             Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.Console()
-            .WriteTo.Seq("http://localhost:5341")
+            .WriteTo.File("LibraryManagement_logs.txt")
             .CreateLogger();
 
             try
